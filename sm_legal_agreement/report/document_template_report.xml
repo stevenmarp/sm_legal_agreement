@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_document_template" model="ir.actions.report">
+        <field name="name">Document Template PDF</field>
+        <field name="model">sm.document.preview.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sm_legal_agreement.report_document_template</field>
+        <field name="report_file">sm_legal_agreement.report_document_template</field>
+        <field name="print_report_name">'Document - %s' % (object.template_id.name or 'Template')</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_document_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            .document-content {
+                                font-family: "Times New Roman", Times, serif;
+                                font-size: 12pt;
+                                line-height: 1.6;
+                                text-align: justify;
+                            }
+                            .document-content p {
+                                margin-bottom: 10px;
+                            }
+                            .document-content table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            .document-content table td,
+                            .document-content table th {
+                                padding: 5px;
+                                vertical-align: top;
+                            }
+                        </style>
+                        <div class="document-content">
+                            <t t-raw="doc.preview_content"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Alternative: Simple template without external layout -->
+    <template id="report_document_template_simple">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article o_report_layout_standard">
+                    <style>
+                        @page {
+                            margin: 2cm;
+                        }
+                        .document-content {
+                            font-family: "Times New Roman", Times, serif;
+                            font-size: 12pt;
+                            line-height: 1.6;
+                            text-align: justify;
+                        }
+                        .document-content p {
+                            margin-bottom: 10px;
+                        }
+                    </style>
+                    <div class="document-content">
+                        <t t-raw="doc.preview_content"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
