@@ -68,9 +68,8 @@
                         <notebook>
                             <page string="Template Content" name="content">
                                 <field name="template_body" 
-                                       widget="html"
-                                       placeholder="Write your template here. Use {{1}}, {{2}}, etc. for dynamic content..."
-                                       options="{'collaborative': false}"/>
+                                       widget="tinymce"
+                                       placeholder="Write your template here. Use {{1}}, {{2}}, etc. for dynamic content..."/>
                             </page>
                             <page string="Variables" name="variables">
                                 <field name="variable_ids">
@@ -142,11 +141,10 @@
                     <filter string="Legal Agreements" name="legal" domain="[('category', '=', 'legal')]"/>
                     <filter string="Contracts" name="contract" domain="[('category', '=', 'contract')]"/>
                     <filter string="Letters" name="letter" domain="[('category', '=', 'letter')]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
-                        <filter string="Source Model" name="group_model" context="{'group_by': 'model_id'}"/>
-                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
-                    </group>
+                    <separator/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                    <filter string="Source Model" name="group_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
                 </search>
             </field>
         </record>

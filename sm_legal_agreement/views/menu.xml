@@ -5,6 +5,7 @@
         <menuitem id="sm_document_template_menu_root"
                   name="Document Templates"
                   web_icon="sm_legal_agreement,static/description/icon.png"
+                  groups="base.group_user"
                   sequence="100"/>
 
         <!-- Sub Menu: Templates -->
@@ -12,13 +13,14 @@
                   name="Templates"
                   parent="sm_document_template_menu_root"
                   action="sm_document_template_action"
+                  groups="base.group_user"
                   sequence="10"/>
 
         <!-- Configuration Menu -->
         <menuitem id="sm_document_template_menu_config"
                   name="Configuration"
                   parent="sm_document_template_menu_root"
-                  groups="group_document_template_manager"
+                  groups="base.group_system"
                   sequence="100"/>
 
     </data>

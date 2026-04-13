@@ -45,7 +45,7 @@ How to Use:
     'license': 'LGPL-3',
     'price': 400.00,
     'currency': 'usd',
-    'depends': ['base', 'mail', 'web'],
+    'depends': ['base', 'mail', 'web', 'sm_tinymce_editor'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
