@@ -60,9 +60,6 @@ class DocumentTemplate(models.Model):
         'sm.document.template.variable',
         'template_id',
         string="Template Variables",
-        compute='_compute_variable_ids',
-        store=True,
-        readonly=False,
         copy=True
     )
     
@@ -93,41 +90,35 @@ class DocumentTemplate(models.Model):
         readonly=True
     )
 
-    @api.depends('template_body')
-    def _compute_variable_ids(self):
+    @api.onchange('template_body')
+    def _onchange_template_body(self):
         """Auto-detect placeholders in template and create/update variables"""
-        for rec in self:
-            if not rec.template_body:
-                rec.variable_ids = [(5, 0, 0)]
-                continue
+        if not self.template_body:
+            self.variable_ids = [(5, 0, 0)]
+            return
 
-            # Find all placeholders like {{1}}, {{2}}, {{10}}, etc.
-            body_vars = set(re.findall(r'\{\{[1-9][0-9]*\}\}', rec.template_body or ''))
+        # Find all placeholders like {{1}}, {{2}}, {{10}}, etc.
+        body_vars = set(re.findall(r'\{\{[1-9][0-9]*\}\}', self.template_body or ''))
 
-            if not body_vars:
-                rec.variable_ids = [(5, 0, 0)]
-                continue
+        if not body_vars:
+            self.variable_ids = [(5, 0, 0)]
+            return
 
-            # Preserve existing variable data (user edits)
-            existing_data = {}
-            for var in rec.variable_ids:
-                if var.name:
-                    existing_data[var.name] = {
-                        'variable_type': var.variable_type or 'free_text',
-                        'free_text_value': var.free_text_value or False,
-                        'field_path': var.field_path or False,
-                        'demo_value': var.demo_value or '[Demo]',
-                    }
+        existing_names = set(self.variable_ids.mapped('name'))
 
-            # Clear and rebuild — safe for both new and existing records
-            commands = [(5, 0, 0)]
-            for name in sorted(body_vars, key=lambda x: int(x.strip('{}'))):
-                vals = {'name': name, 'demo_value': '[Demo]'}
-                if name in existing_data:
-                    vals.update(existing_data[name])
-                commands.append((0, 0, vals))
+        # Only add new variables, keep existing ones intact
+        new_vars = sorted(body_vars - existing_names, key=lambda x: int(x.strip('{}')))
+        # Remove variables no longer in template
+        to_remove = self.variable_ids.filtered(lambda v: v.name not in body_vars)
 
-            rec.variable_ids = commands
+        commands = []
+        for var in to_remove:
+            commands.append((2, var.id, 0))
+        for name in new_vars:
+            commands.append((0, 0, {'name': name, 'demo_value': '[Demo]'}))
+
+        if commands:
+            self.variable_ids = commands
 
     @api.depends('template_body', 'variable_ids.demo_value', 'variable_ids.free_text_value')
     def _compute_preview_body(self):
