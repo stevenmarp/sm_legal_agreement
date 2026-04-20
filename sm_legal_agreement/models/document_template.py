@@ -256,7 +256,6 @@ class DocumentTemplateVariable(models.Model):
     name = fields.Char(
         string="Placeholder",
         required=True,
-        readonly=True,
         help="The placeholder name like {{1}}, {{2}}, etc."
     )
     

@@ -74,7 +74,7 @@
                             <page string="Variables" name="variables">
                                 <field name="variable_ids">
                                     <list editable="bottom" create="0" delete="0">
-                                        <field name="name" readonly="1" string="Placeholder"/>
+                                        <field name="name" readonly="1" force_save="1" string="Placeholder"/>
                                         <field name="variable_type" string="Type"/>
                                         <field name="model_name" column_invisible="1"/>
                                         <field name="free_text_value" 
