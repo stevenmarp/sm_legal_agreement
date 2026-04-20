@@ -34,18 +34,28 @@ class DocumentPreviewWizard(models.TransientModel):
             template = wizard.template_id
             content = template.template_body or ''
             
+            record = None
             if wizard.use_real_record and wizard.record_id and template.model_name:
-                # Use real record data
                 try:
                     record = self.env[template.model_name].browse(wizard.record_id)
-                    if record.exists():
-                        content = template.render_template(record)
-                    else:
-                        content = self._render_with_demo(template)
+                    if not record.exists():
+                        record = None
+                except Exception:
+                    record = None
+
+            # Auto-fetch first record from model if no specific record
+            if not record and template.model_name:
+                try:
+                    record = self.env[template.model_name].search([], limit=1)
+                except Exception:
+                    record = None
+
+            if record:
+                try:
+                    content = template.render_template(record)
                 except Exception:
                     content = self._render_with_demo(template)
             else:
-                # Use demo values
                 content = self._render_with_demo(template)
             
             wizard.preview_content = content

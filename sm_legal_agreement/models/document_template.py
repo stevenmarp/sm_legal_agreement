@@ -120,22 +120,33 @@ class DocumentTemplate(models.Model):
         if commands:
             self.variable_ids = commands
 
-    @api.depends('template_body', 'variable_ids.demo_value', 'variable_ids.free_text_value')
+    @api.depends('template_body', 'variable_ids.demo_value', 'variable_ids.free_text_value',
+                 'variable_ids.variable_type', 'variable_ids.field_path')
     def _compute_preview_body(self):
-        """Generate preview with demo values"""
+        """Generate preview — auto-fetch first record from model for field variables"""
         for rec in self:
             if not rec.template_body:
                 rec.preview_body = ""
                 continue
-                
+
+            # Try to get a sample record for field-type variables
+            sample_record = None
+            if rec.model_name:
+                try:
+                    sample_record = self.env[rec.model_name].search([], limit=1)
+                except Exception:
+                    sample_record = None
+
             preview = rec.template_body
             for var in rec.variable_ids:
-                # Use free_text_value if type is free_text, otherwise use demo_value
                 if var.variable_type == 'free_text' and var.free_text_value:
                     value = var.free_text_value
+                elif var.variable_type == 'field' and var.field_path and sample_record:
+                    value = rec._get_field_value(sample_record, var.field_path)
+                    if not value:
+                        value = var.demo_value or var.name
                 else:
                     value = var.demo_value or var.name
-                # Simple replacement without extra HTML - the template already has styling
                 preview = preview.replace(var.name, str(value))
             
             rec.preview_body = preview
