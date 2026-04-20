@@ -41,10 +41,10 @@ How to Use:
 5. Link the template to your records and generate documents
     """,
     'author': 'Steven Marp',
-    'website': 'https://apps.odoo.com/apps/browse?repo_maintainer_id=512936s',
-    'license': 'LGPL-3',
+    'website': 'https://apps.odoo.com/apps/browse?repo_maintainer_id=512936',
+    'license': 'OPL-1',
     'price': 400.00,
-    'currency': 'usd',
+    'currency': 'USD',
     'depends': ['base', 'mail', 'web', 'sm_tinymce_editor'],
     'data': [
         'security/security.xml',
