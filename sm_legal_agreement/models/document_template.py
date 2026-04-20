@@ -98,28 +98,36 @@ class DocumentTemplate(models.Model):
         """Auto-detect placeholders in template and create/update variables"""
         for rec in self:
             if not rec.template_body:
+                rec.variable_ids = [(5, 0, 0)]
                 continue
-                
+
             # Find all placeholders like {{1}}, {{2}}, {{10}}, etc.
             body_vars = set(re.findall(r'\{\{[1-9][0-9]*\}\}', rec.template_body or ''))
-            existing_vars = rec.variable_ids
-            existing_names = set(existing_vars.mapped('name'))
-            
-            # Variables to create
-            new_vars = [name for name in body_vars if name not in existing_names]
-            
-            # Variables to delete (no longer in template)
-            vars_to_delete = existing_vars.filtered(lambda v: v.name not in body_vars)
-            
-            # Build commands
-            commands = []
-            for var in vars_to_delete:
-                commands.append((2, var.id))
-            for name in sorted(new_vars, key=lambda x: int(x.strip('{}'))):
-                commands.append((0, 0, {'name': name}))
-            
-            if commands:
-                rec.variable_ids = commands
+
+            if not body_vars:
+                rec.variable_ids = [(5, 0, 0)]
+                continue
+
+            # Preserve existing variable data (user edits)
+            existing_data = {}
+            for var in rec.variable_ids:
+                if var.name:
+                    existing_data[var.name] = {
+                        'variable_type': var.variable_type or 'free_text',
+                        'free_text_value': var.free_text_value or False,
+                        'field_path': var.field_path or False,
+                        'demo_value': var.demo_value or '[Demo]',
+                    }
+
+            # Clear and rebuild — safe for both new and existing records
+            commands = [(5, 0, 0)]
+            for name in sorted(body_vars, key=lambda x: int(x.strip('{}'))):
+                vals = {'name': name, 'demo_value': '[Demo]'}
+                if name in existing_data:
+                    vals.update(existing_data[name])
+                commands.append((0, 0, vals))
+
+            rec.variable_ids = commands
 
     @api.depends('template_body', 'variable_ids.demo_value', 'variable_ids.free_text_value')
     def _compute_preview_body(self):
