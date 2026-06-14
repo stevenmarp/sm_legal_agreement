@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="sm_document_template_menu_root"
+                  name="Document Templates"
+                  web_icon="sm_legal_agreement,static/description/icon.png"
+                  sequence="100"/>
+
+        <!-- Sub Menu: Templates -->
+        <menuitem id="sm_document_template_menu_templates"
+                  name="Templates"
+                  parent="sm_document_template_menu_root"
+                  action="sm_document_template_action"
+                  sequence="10"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="sm_document_template_menu_config"
+                  name="Configuration"
+                  parent="sm_document_template_menu_root"
+                  groups="group_document_template_manager"
+                  sequence="100"/>
+
+    </data>
+</odoo>

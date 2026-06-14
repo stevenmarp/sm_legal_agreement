@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sm_document_template_user,sm.document.template.user,model_sm_document_template,group_document_template_user,1,0,0,0
+access_sm_document_template_manager,sm.document.template.manager,model_sm_document_template,group_document_template_manager,1,1,1,1
+access_sm_document_template_variable_user,sm.document.template.variable.user,model_sm_document_template_variable,group_document_template_user,1,0,0,0
+access_sm_document_template_variable_manager,sm.document.template.variable.manager,model_sm_document_template_variable,group_document_template_manager,1,1,1,1
+access_sm_document_preview_wizard,sm.document.preview.wizard,model_sm_document_preview_wizard,group_document_template_user,1,1,1,1

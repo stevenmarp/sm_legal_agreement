@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Document Template Form View -->
+        <record id="sm_document_template_view_form" model="ir.ui.view">
+            <field name="name">sm.document.template.view.form</field>
+            <field name="model">sm.document.template</field>
+            <field name="arch" type="xml">
+                <form string="Document Template">
+                    <header>
+                        <button name="action_preview" 
+                                type="object" 
+                                string="Preview" 
+                                class="btn-primary"
+                                icon="fa-eye"
+                                invisible="not template_body"/>
+                        <button name="action_print_pdf" 
+                                type="object" 
+                                string="Print PDF" 
+                                class="btn-secondary"
+                                icon="fa-print"
+                                invisible="not template_body"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-bar-chart" type="object" name="action_preview">
+                                <field name="usage_count" widget="statinfo" string="Used"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Sales Agreement Template"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="model_id" options="{'no_create': True, 'no_quick_create': True}"/>
+                                <field name="model_name" invisible="1"/>
+                                <field name="category"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        
+                        <field name="description" placeholder="Describe what this template is used for..."/>
+                        
+                        <separator string="Template Instructions" class="mt-3"/>
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-2"/>
+                            <strong>How to use dynamic placeholders:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Use <code>{{1}}</code>, <code>{{2}}</code>, <code>{{3}}</code>... as placeholders for dynamic content</li>
+                                <li>Placeholders will be automatically detected and shown in the <strong>Variables</strong> tab</li>
+                                <li>For each placeholder, you can assign:
+                                    <ul>
+                                        <li><strong>Free Text:</strong> A static value that stays the same</li>
+                                        <li><strong>Model Field:</strong> A field from the source model (e.g., <code>partner_id.name</code>)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <notebook>
+                            <page string="Template Content" name="content">
+                                <field name="template_body" 
+                                       widget="html"
+                                       placeholder="Write your template here. Use {{1}}, {{2}}, etc. for dynamic content..."
+                                       options="{'collaborative': false}"/>
+                            </page>
+                            <page string="Variables" name="variables">
+                                <field name="variable_ids">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="name" readonly="1" string="Placeholder"/>
+                                        <field name="variable_type" string="Type"/>
+                                        <field name="model_name" column_invisible="1"/>
+                                        <field name="free_text_value" 
+                                               invisible="variable_type != 'free_text'"
+                                               required="variable_type == 'free_text'"
+                                               string="Text Value"/>
+                                        <field name="field_path" 
+                                               invisible="variable_type != 'field'"
+                                               required="variable_type == 'field'"
+                                               string="Field Path"
+                                               placeholder="e.g. partner_id.name"/>
+                                        <field name="demo_value" string="Demo/Preview"/>
+                                    </tree>
+                                </field>
+                                <div class="alert alert-secondary mt-3" role="alert">
+                                    <i class="fa fa-lightbulb-o me-2"/>
+                                    <strong>Field Path Examples:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li><code>name</code> - Direct field</li>
+                                        <li><code>partner_id.name</code> - Related field</li>
+                                        <li><code>partner_id.country_id.name</code> - Nested related field</li>
+                                        <li><code>amount_total</code> - Numeric field</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            <page string="Preview" name="preview">
+                                <field name="preview_body" readonly="1" widget="html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Document Template List View -->
+        <record id="sm_document_template_view_list" model="ir.ui.view">
+            <field name="name">sm.document.template.view.list</field>
+            <field name="model">sm.document.template</field>
+            <field name="arch" type="xml">
+                <tree string="Document Templates" default_order="sequence, name">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="category" optional="show"/>
+                    <field name="usage_count" string="Used"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Document Template Search View -->
+        <record id="sm_document_template_view_search" model="ir.ui.view">
+            <field name="name">sm.document.template.view.search</field>
+            <field name="model">sm.document.template</field>
+            <field name="arch" type="xml">
+                <search string="Search Templates">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="description"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Legal Agreements" name="legal" domain="[('category', '=', 'legal')]"/>
+                    <filter string="Contracts" name="contract" domain="[('category', '=', 'contract')]"/>
+                    <filter string="Letters" name="letter" domain="[('category', '=', 'letter')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                        <filter string="Source Model" name="group_model" context="{'group_by': 'model_id'}"/>
+                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="sm_document_template_view_kanban" model="ir.ui.view">
+            <field name="name">sm.document.template.view.kanban</field>
+            <field name="model">sm.document.template</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" default_group_by="category">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="category"/>
+                    <field name="usage_count"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_content">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="text-muted">
+                                    <field name="model_id"/>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge text-bg-secondary">
+                                        <i class="fa fa-bar-chart me-1"/>
+                                        <field name="usage_count"/> uses
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="sm_document_template_action" model="ir.actions.act_window">
+            <field name="name">Document Templates</field>
+            <field name="res_model">sm.document.template</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="sm_document_template_view_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first document template
+                </p>
+                <p>
+                    Document templates allow you to create dynamic documents with placeholders 
+                    that can be filled with data from any Odoo model.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

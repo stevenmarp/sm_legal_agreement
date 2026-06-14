@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sm_legal_agreement.DynamicFieldSelectorChar">
+        <div class="o_field_dynamic_selector position-relative">
+            <input 
+                t-ref="input"
+                type="text"
+                class="o_input"
+                t-att-value="props.record.data[props.name]"
+                t-att-placeholder="props.placeholder || 'e.g. partner_id.name'"
+                t-att-readonly="props.readonly"
+                t-on-input="onInput"
+                t-on-blur="onBlur"
+                t-on-focus="onFocus"
+            />
+            <div t-if="state.loading" class="position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
+                <i class="fa fa-spinner fa-spin text-muted"/>
+            </div>
+            <div t-if="state.showSuggestions and state.suggestions.length" 
+                 class="o_field_selector_suggestions position-absolute bg-white border rounded shadow-sm"
+                 style="top: 100%; left: 0; right: 0; z-index: 1000; max-height: 200px; overflow-y: auto;">
+                <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion.name">
+                    <div class="p-2 cursor-pointer hover-bg-light d-flex justify-content-between align-items-center"
+                         t-on-click="() => this.selectSuggestion(suggestion)"
+                         style="cursor: pointer;">
+                        <div>
+                            <strong t-esc="suggestion.name"/>
+                            <small class="text-muted d-block" t-esc="suggestion.label"/>
+                        </div>
+                        <span class="badge text-bg-secondary" t-esc="suggestion.type"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>
