@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Dynamic Document Template Builder',
-    'version': '15.0.1.0.0',
+    'version': '15.0.1.0.1',
     'category': 'Productivity',
     'summary': 'Create dynamic document templates with placeholders mapped to any model fields',
     'description': """
