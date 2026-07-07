@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Dynamic Document Template Builder',
-    'version': '15.0.1.0.1',
+    'version': '15.0.1.0.2',
     'category': 'Productivity',
     'summary': 'Create dynamic document templates with placeholders mapped to any model fields',
     'description': """
@@ -58,6 +58,8 @@ How to Use:
     'assets': {
         'web.assets_backend': [
             'sm_legal_agreement/static/src/js/dynamic_field_selector.js',
+        ],
+        'web.assets_qweb': [
             'sm_legal_agreement/static/src/xml/dynamic_field_selector.xml',
         ],
     },
