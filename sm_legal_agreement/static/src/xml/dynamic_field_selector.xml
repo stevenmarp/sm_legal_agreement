@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="DynamicFieldSelectorChar" t-inherit="web.LegacyFieldValue" t-inherit-mode="primary">
-        <!-- Optional base inheritance or simple standalone template -->
+    <t t-name="DynamicFieldSelectorChar">
+        <span class="o_field_dynamic_selector"/>
     </t>
 
     <t t-name="DynamicFieldSelectorChar.edit">
