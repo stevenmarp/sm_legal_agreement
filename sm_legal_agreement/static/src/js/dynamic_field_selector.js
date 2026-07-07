@@ -1,20 +1,15 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { CharField, charField } from "@web/views/fields/char/char_field";
+import { CharField } from "@web/views/fields/char/char_field";
 import { useService } from "@web/core/utils/hooks";
-import { useState, useRef, onMounted } from "@odoo/owl";
+import { useState, useRef } from "@odoo/owl";
 
 /**
  * Dynamic Field Selector Widget
  * Provides autocomplete suggestions for model field paths
  */
 export class DynamicFieldSelectorChar extends CharField {
-    static template = "sm_legal_agreement.DynamicFieldSelectorChar";
-    static props = {
-        ...CharField.props,
-    };
-
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -105,9 +100,9 @@ export class DynamicFieldSelectorChar extends CharField {
     }
 }
 
-export const dynamicFieldSelectorChar = {
-    ...charField,
-    component: DynamicFieldSelectorChar,
+DynamicFieldSelectorChar.template = "sm_legal_agreement.DynamicFieldSelectorChar";
+DynamicFieldSelectorChar.props = {
+    ...CharField.props,
 };
 
-registry.category("fields").add("DynamicFieldSelectorChar", dynamicFieldSelectorChar);
+registry.category("fields").add("DynamicFieldSelectorChar", DynamicFieldSelectorChar);

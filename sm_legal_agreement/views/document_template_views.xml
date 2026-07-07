@@ -13,13 +13,13 @@
                                 string="Preview" 
                                 class="btn-primary"
                                 icon="fa-eye"
-                                invisible="not template_body"/>
+                                attrs="{'invisible': [('template_body', '=', False)]}"/>
                         <button name="action_print_pdf" 
                                 type="object" 
                                 string="Print PDF" 
                                 class="btn-secondary"
                                 icon="fa-print"
-                                invisible="not template_body"/>
+                                attrs="{'invisible': [('template_body', '=', False)]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -27,7 +27,7 @@
                                 <field name="usage_count" widget="statinfo" string="Used"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1>
@@ -77,14 +77,13 @@
                                     <tree editable="bottom" create="0" delete="0">
                                         <field name="name" readonly="1" string="Placeholder"/>
                                         <field name="variable_type" string="Type"/>
-                                        <field name="model_name" column_invisible="1"/>
+                                        <field name="model_name" invisible="1"/>
                                         <field name="free_text_value" 
-                                               invisible="variable_type != 'free_text'"
-                                               required="variable_type == 'free_text'"
+                                               attrs="{'invisible': [('variable_type', '!=', 'free_text')], 'required': [('variable_type', '=', 'free_text')]}"
                                                string="Text Value"/>
                                         <field name="field_path" 
-                                               invisible="variable_type != 'field'"
-                                               required="variable_type == 'field'"
+                                               attrs="{'invisible': [('variable_type', '!=', 'field')], 'required': [('variable_type', '=', 'field')]}"
+                                               widget="DynamicFieldSelectorChar"
                                                string="Field Path"
                                                placeholder="e.g. partner_id.name"/>
                                         <field name="demo_value" string="Demo/Preview"/>

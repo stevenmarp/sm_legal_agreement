@@ -10,7 +10,7 @@
                     <group>
                         <field name="template_id" readonly="1"/>
                         <field name="use_real_record"/>
-                        <field name="record_id" invisible="not use_real_record"/>
+                        <field name="record_id" attrs="{'invisible': [('use_real_record', '=', False)]}"/>
                     </group>
                     <separator string="Preview"/>
                     <div class="border rounded p-3 bg-white" style="min-height: 400px;">
