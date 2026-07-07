@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Dynamic Document Template Builder',
-    'version': '15.0.1.0.0',
+    'version': '14.0.1.0.0',
     'category': 'Productivity',
     'summary': 'Create dynamic document templates with placeholders mapped to any model fields',
     'description': """
@@ -51,16 +51,14 @@ How to Use:
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
         'report/document_template_report.xml',
+        'views/assets.xml',
         'views/document_template_views.xml',
         'wizard/document_preview_views.xml',
         'views/menu.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'sm_legal_agreement/static/src/js/dynamic_field_selector.js',
-            'sm_legal_agreement/static/src/xml/dynamic_field_selector.xml',
-        ],
-    },
+    'qweb': [
+        'static/src/xml/dynamic_field_selector.xml',
+    ],
     'images': ['static/description/icon.png'],
     'installable': True,
     'application': True,
